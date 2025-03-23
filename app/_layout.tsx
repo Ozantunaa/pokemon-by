@@ -35,7 +35,7 @@ export default function RootLayout() {
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="card-detail" />
+          <Stack.Screen name="card-detail" options={{ headerBackButtonDisplayMode: 'minimal' }} />
         </Stack>
         <StatusBar style="dark" />
       </ThemeProvider>

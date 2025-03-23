@@ -29,7 +29,7 @@ const getCardById = async (id: string): Promise<PokemonCard> => {
     const response = await axios.get(
         `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.ALLCARDS}/${id}`
     );
-    return response.data;
+    return response.data.data;
 };
 
 export const useCard = (id: string) => {

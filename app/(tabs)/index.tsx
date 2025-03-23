@@ -1,8 +1,9 @@
-import { StyleSheet, FlatList, ActivityIndicator, Text, View } from 'react-native';
+import { StyleSheet, FlatList, ActivityIndicator, Text, View, Pressable, SafeAreaView } from 'react-native';
 import { useCallback } from 'react';
 import { useCards } from '@/services/cardsService';
 import { Image } from 'expo-image';
 import { PokemonCard } from '@/types';
+import { Link } from 'expo-router';
 
 export default function HomeScreen() {
   const {
@@ -21,14 +22,17 @@ export default function HomeScreen() {
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const renderItem = ({ item }: { item: PokemonCard }) => (
-    <View style={styles.cardContainer}>
-      <Image
-        source={{ uri: item.images.small }}
-        style={styles.cardImage}
-        contentFit='contain'
-      />
-      <Text style={styles.cardName}>{item.name}</Text>
-    </View>
+    <Link href={{ pathname: `/card-detail`, params: { id: item.id } }} asChild>
+      <Pressable style={styles.cardContainer}>
+        <Image
+          source={{ uri: item.images.small }}
+          style={styles.cardImage}
+          contentFit='contain'
+        />
+        <Text style={styles.cardName}>{item.name}</Text>
+      </Pressable>
+    </Link>
+
   );
 
   const renderFooter = () => {
@@ -50,6 +54,7 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
+      <SafeAreaView />
       <FlatList
         data={allCards}
         renderItem={renderItem}
@@ -67,7 +72,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   listContainer: {
     padding: 10,
