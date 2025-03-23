@@ -2,6 +2,9 @@
 
 This project is a mobile application developed to display, manage, and store Pokemon cards locally. It is built using **Expo** and powered by modern React Native tools.
 
+# Note
+I used the Async Storage library for storage. React-native-mmkv is faster and recommended, but I chose Async Storage so the app can be tested with Expo Go without a client. I’d consider adding it for production.
+
 # ScreenShots
 
 <p float="left"> 
@@ -10,31 +13,30 @@ This project is a mobile application developed to display, manage, and store Pok
 
 </p>
 
-# Here is The Video Link
-https://streamable.com/vvlv1e
+# Pokemon Card App
+
+Built with React Native Expo
 
 # Features
-- Listing and viewing details of Pokemon cards
-- Saving cards to local storage
-- Fast and cached API requests
-- Lightweight and performance-focused state management
+- View Pokemon card list and details
+- Save cards locally
+- Fast API requests with caching
+- Simple state management
 - Optimized image loading
 
-# Technologies Used
-- **Expo**: Used as the core framework to streamline the React Native development experience.
-- **Expo Image**: Implemented for fast and optimized image loading.
-- **Zustand**: A lightweight and simple state management solution to handle the app's state.
-- **TanStack Query**: Utilized for efficient API requests, caching, and synchronization.
-- **Async Storage**: Employed to store Pokemon cards locally on the device.
+# Technologies
+- **Expo**
+- **Expo Image**: Fast image loading
+- **Zustand**: state management
+- **TanStack Query**: API handling
+- **Async Storage**: Local storage
 
 # Installation
-- Clone the repository: `git clone https://github.com/Ozantunaa/pokemon-by`
-- Install dependencies: `npm install`
-- Start the Expo project: `npx expo start`
+- Clone: `git clone https://github.com/Ozantunaa/pokemon-by`
+- Install: `npm install`
+- Run: `npx expo start`
 
 # Usage
-- Upon launching the app, a list of Pokemon cards will be displayed.
-- Tap on a card to view its details.
-- Press the _Save_ button to store your Saved cards, which will be saved locally using **Async Storage**.
-- State management with **Zustand** ensures optimized app performance.
-- API requests are cached and offline access is supported via **TanStack Query**.
+- Open app to see Pokemon cards
+- Tap a card for details
+- Press save to store it locally with **Async Storage**
