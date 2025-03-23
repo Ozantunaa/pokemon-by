@@ -1,9 +1,10 @@
 import { StyleSheet, FlatList, ActivityIndicator, Text, View, Pressable, SafeAreaView } from 'react-native';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useCards } from '@/services/cardsService';
 import { Image } from 'expo-image';
 import { PokemonCard } from '@/types';
 import { Link } from 'expo-router';
+import { useCardsStore } from '@/stores/cardsStore';
 
 export default function HomeScreen() {
   const {
@@ -13,7 +14,13 @@ export default function HomeScreen() {
     isFetchingNextPage,
     isLoading
   } = useCards();
+  const { loadSavedCards, isSaved } = useCardsStore();
+
   const allCards = data?.pages.flatMap(page => page.data) ?? [];
+
+  useEffect(() => {
+    loadSavedCards();
+  }, []);
 
   const loadMore = useCallback(() => {
     if (hasNextPage && !isFetchingNextPage) {
@@ -21,19 +28,22 @@ export default function HomeScreen() {
     }
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  const renderItem = ({ item }: { item: PokemonCard }) => (
-    <Link href={{ pathname: `/card-detail`, params: { id: item.id } }} asChild>
-      <Pressable style={styles.cardContainer}>
-        <Image
-          source={{ uri: item.images.small }}
-          style={styles.cardImage}
-          contentFit='contain'
-        />
-        <Text style={styles.cardName}>{item.name}</Text>
-      </Pressable>
-    </Link>
+  const renderItem = ({ item }: { item: PokemonCard }) => {
+    const saved = isSaved(item.id);
+    return (
+      <Link href={{ pathname: `/card-detail`, params: { id: item.id } }} asChild>
+        <Pressable style={styles.cardContainer}>
+          <Image
+            source={{ uri: item.images.small }}
+            style={styles.cardImage}
+            contentFit='contain'
+          />
+          <Text style={[styles.cardName, saved && { color: 'gold' }]}>{item.name} {saved && "(Saved)"}</Text>
+        </Pressable>
+      </Link>
 
-  );
+    )
+  }
 
   const renderFooter = () => {
     if (!isFetchingNextPage) return null;
@@ -83,7 +93,6 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     alignItems: 'center',
-
   },
   cardImage: {
     width: 150,

@@ -1,12 +1,26 @@
-import { StyleSheet, Text, View, ActivityIndicator, ScrollView } from 'react-native'
+import { StyleSheet, Text, View, ActivityIndicator, ScrollView, Pressable } from 'react-native'
 import React from 'react'
 import { useLocalSearchParams } from 'expo-router';
 import { Image } from 'expo-image';
 import { useCard } from '@/services/cardsService';
+import { useCardsStore } from '@/stores/cardsStore';
+import { Ionicons } from '@expo/vector-icons';
+import { StatusBar } from 'expo-status-bar';
 
 const CardDetail = () => {
   const { id } = useLocalSearchParams();
   const { data: card, isLoading } = useCard(id as string);
+  const { saveCard, removeSavedCard, isSaved } = useCardsStore();
+
+  const toggleSave = async () => {
+    if (!card) return;
+
+    if (isSaved(card.id)) {
+      await removeSavedCard(card.id);
+    } else {
+      await saveCard(card);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -26,12 +40,24 @@ const CardDetail = () => {
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+      <StatusBar style='auto' />
       <View style={styles.content}>
         <Image
           source={{ uri: card.images.large }}
           style={styles.cardImage}
           contentFit='contain'
         />
+        <Pressable
+          style={styles.saveButton}
+          onPress={toggleSave}
+        >
+          <Ionicons
+            name={isSaved(card.id) ? "bookmark" : "bookmark-outline"}
+            size={28}
+            color={isSaved(card.id) ? "#e74c3c" : "#2d3436"}
+          />
+        </Pressable>
+
         <View style={styles.infoContainer}>
           <View style={styles.headerRow}>
             <Text style={styles.cardName}>{card.name}</Text>
@@ -189,5 +215,9 @@ const styles = StyleSheet.create({
     color: '#636e72',
     lineHeight: 20,
   },
-
+  saveButton: {
+    position: 'absolute',
+    top: 16,
+    right: 16,
+  },
 });
