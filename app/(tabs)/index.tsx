@@ -5,6 +5,8 @@ import { Image } from 'expo-image';
 import { PokemonCard } from '@/types';
 import { Link } from 'expo-router';
 import { useCardsStore } from '@/stores/cardsStore';
+import Loading from '@/components/Loading';
+import { CardItem } from '@/components/CardItem';
 
 export default function HomeScreen() {
   const {
@@ -30,37 +32,17 @@ export default function HomeScreen() {
 
   const renderItem = ({ item }: { item: PokemonCard }) => {
     const saved = isSaved(item.id);
-    return (
-      <Link href={{ pathname: `/card-detail`, params: { id: item.id } }} asChild>
-        <Pressable style={styles.cardContainer}>
-          <Image
-            source={{ uri: item.images.small }}
-            style={styles.cardImage}
-            contentFit='contain'
-          />
-          <Text style={[styles.cardName, saved && { color: 'gold' }]}>{item.name} {saved && "(Saved)"}</Text>
-        </Pressable>
-      </Link>
-
-    )
+    return <CardItem item={item} saved={saved} />;
   }
 
   const renderFooter = () => {
     if (!isFetchingNextPage) return null;
     return (
-      <View style={styles.loaderContainer}>
-        <ActivityIndicator size="large" />
-      </View>
+      <Loading/>
     );
   };
 
-  if (isLoading) {
-    return (
-      <View style={styles.loaderContainer}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  }
+  if (isLoading) return <Loading/>
 
   return (
     <View style={styles.container}>
@@ -86,30 +68,5 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     padding: 10,
-  },
-  cardContainer: {
-    flex: 1,
-    margin: 5,
-    padding: 10,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  cardImage: {
-    width: 150,
-    height: 200,
-    borderRadius: 8,
-  },
-  cardName: {
-    marginTop: 8,
-    fontSize: 14,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  loaderContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-    backgroundColor: 'white'
   },
 });
